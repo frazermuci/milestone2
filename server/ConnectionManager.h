@@ -12,19 +12,27 @@ class ConnectionManager
 {
 	websocket* server;
 	Model model;
-	vector<int> IDs = vector<int>();//if client disconnects and reconnects, it will cause state	
-									//to revert
+	map<int,int> IDs = map<int,int>();//if client disconnects and reconnects, it will cause state	
+	map<int,int> stateReady = map<int, int>();							//to revert
 	
 	public: 
 		ConnectionManager(Server* server);
 		
 		bool connReady();
 		
-		void addID(int ID);
+		void addConn(int ID, int snakeID);
 		
-		void removeID(int ID);
+		void removeConn(int ID);
 		
-		void sendState();		
+		void sendState();
+		
+		void send(string message, int clientID);
+		
+		void sendAll(string message);
+		
+		void sendIDs();
+		
+		string serializeModel();
 }
 
 #endif

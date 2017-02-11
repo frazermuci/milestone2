@@ -13,34 +13,61 @@ webSocket server;
 ConnectionManager cm = ConnectionManager(&server);//server is not initialized..well see.
 
 /* called when a client connects */
-void openHandler(int clientID){
-    ostringstream os;
+void openHandler(int clientID)
+{
   
-	cm.addID(clientID);
+	cm.send("init", clientID);
 	if(cm.connReady())
 	{
-		cm.init("init");//on client side, wait until "begin"
+		cm.sendIDs();//on client side, wait until "begin"
 	}
 }
 
 /* called when a client disconnects */
-void closeHandler(int clientID){   
-	cm.removeID(clientID);
+void closeHandler(int clientID)
+{   
+	cm.removeConn(clientID);
 }
 
-/* called when a client sends a message to the server */
-void messageHandler(int clientID, string message){
-		
-		if(cm.connReady() && cm.stateReady(clientID))//for the compact object, we can do a constructor that takes in
-						  //the full state and prunes it
+vector<string> mVect parseMessage(string message)
+{
+	vector<string> mVect = vector<string>();
+	ostringstream in;
+	for(char c : message)
+	{
+		if(c != ':')
 		{
-			//loading ClientState from message
-			//cm.deserializeMessage(message,&state_struct);// this will be client
-			cm.updateModel(clientID);
-			
-			
+			in << c;
+		}
+		else
+		{
+			mVect.push_back(in.str());
+			in.str("");
+		}
+	}
+	mVect.push_back(in.str());
+	return mVect;
+}
+/* called when a client sends a message to the server */
+void messageHandler(int clientID, string message)
+{
+		vector<string> mVect = parseMessage(message);
+		if(strcmp(mVect.at(0).c_str(), "init") == 0)
+		{
+			//parse message and get id
+			cm.addConn(clientID, atoi(mVect.at(1)));
+			cout << "init " << clientID << " " << atoi(mVect.at(1));
+			return;
+		}
+		if(cm.connReady())
+		{
+			//update model from message
+			cout << "desrialize" << endl;//cm.updateModel(deserialize(message));	
+		}
+		if(cm.stateReady(clientID))
+		{			
 			//serializing new state
-			cm.sendState(cm.serializeModel());
+			cout << "sendAll\n";//cm.sendAll(cm.serializeModel());
 		}
 }
 

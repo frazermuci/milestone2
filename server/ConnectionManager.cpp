@@ -5,19 +5,19 @@ ConnectionManager::ConnectionManager(Server* server)
 
 bool ConnectionManager::connReady()
 {
-	return this.IDs.size() == 2;
+	return this.IDs.size() == 2;//means it won't work for more than 2 either
 }
 
-void ConnectionManager::addConn(int ID)
+void ConnectionManager::addConn(int ID, int snakeID)
 {
-	this.IDs.push_back(ID);
+	this.IDs.put(ID, snakeID);
 }
 
 void ConnectionManager::removeConn(int ID)
 {
 	for(auto i = this.IDs.begin(); i!= this.IDs.end();)
 	{
-		if((*i) == ID)
+		if(i->first == ID)
 		{
 			i = this.IDs.erase(i);
 		}
@@ -28,11 +28,32 @@ void ConnectionManager::removeConn(int ID)
 	}
 }
 
-void ConnectionManager::sendState()
+void ConnectionManager::send(string message, int clientID)
 {
-	string stringObj = this.serialize();
+	this.server.wsSend(message, clientID);
+}
+
+void ConnectionManager::sendAll(string message)
+{
 	for(auto i : this.IDs)
 	{
-		this.server.wsSend(stringObj, (*i));
+		this.server.wsSend(message, i->first);
+	}
+}
+
+void ConnectionManager::sendIDs()
+{
+	for(auto a : this.IDs)
+	{
+		for(auto b : this.IDs)
+		{
+			if(b->first != a->first)
+			{
+				ostringstream os;
+				os << b->second;
+				this.server.wsSend(os.str(), a->first);
+				os.str("");
+			}
+		}
 	}
 }
