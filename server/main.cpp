@@ -2,7 +2,9 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <cstring>
 #include <time.h>
+#include "manageconnection.h"
 #include "websocket.h"
 
 using namespace std;
@@ -10,34 +12,44 @@ using namespace std;
 //struct for serialization
 
 webSocket server;
-ConnectionManager cm = ConnectionManager(&server);//server is not initialized..well see.
+ConnectionManager cm = ConnectionManager(&server, 12, 9);//server is not initialized..well see.
+int count = 0;
 
 /* called when a client connects */
 void openHandler(int clientID)
 {
-  
-	cm.send("init", clientID);
-	if(cm.connReady())
+	ostringstream os;
+	bool isZero = count == 0;
+	os << "init"<<":"<<isZero?"2:2":"4:4";
+	cm.send(clientID, os.str());
+	int x,y = 4;
+	if(isZero)
 	{
-		cm.sendIDs();//on client side, wait until "begin"
+		x = 2;
+		y = 2;
 	}
+	cm.addSnake(clientID, x, y, Tuple(0,1));
+	++count;
 }
 
 /* called when a client disconnects */
 void closeHandler(int clientID)
 {   
 	cm.removeConn(clientID);
+	cm.removeSnake(clientID);
+	--count;
 }
 
-vector<string> mVect parseMessage(string message)
+vector<string> parseMessage(string message)
 {
 	vector<string> mVect = vector<string>();
 	ostringstream in;
-	for(char c : message)
+	string::iterator it;
+	for(it = message.begin(); it != message.end(); ++it)
 	{
-		if(c != ':')
+		if((*it) != ':')
 		{
-			in << c;
+			in << (*it);
 		}
 		else
 		{
@@ -48,15 +60,24 @@ vector<string> mVect parseMessage(string message)
 	mVect.push_back(in.str());
 	return mVect;
 }
+
+bool isInit(string str)
+{
+	return strcmp(str.c_str(), "init") == 0;
+}
 /* called when a client sends a message to the server */
 void messageHandler(int clientID, string message)
 {
 		vector<string> mVect = parseMessage(message);
-		if(strcmp(mVect.at(0).c_str(), "init") == 0)
+		if(isInit(mVect.at(0)))
 		{
 			//parse message and get id
-			cm.addConn(clientID, atoi(mVect.at(1)));
-			cout << "init " << clientID << " " << atoi(mVect.at(1));
+			cm.addConn(clientID, atoi(mVect.at(1).c_str()));
+			cout << "init " << clientID << " " << atoi(mVect.at(1).c_str());
+			if(cm.connReady())
+			{
+				cm.sendIDs();//on client side, wait until "begin"
+			}
 			return;
 		}
 		if(cm.connReady())
@@ -67,6 +88,7 @@ void messageHandler(int clientID, string message)
 		if(cm.stateReady(clientID))
 		{			
 			//serializing new state
+			cm.moveModel();
 			cout << "sendAll\n";//cm.sendAll(cm.serializeModel());
 		}
 }

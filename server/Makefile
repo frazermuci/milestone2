@@ -1,7 +1,7 @@
 CC = g++
 CFLAGS = -c
 LDFLAGS =
-SOURCES = main.cpp websocket.cpp sha1.cpp base64.cpp
+SOURCES = main.cpp websocket.cpp sha1.cpp base64.cpp manageconnection.cpp model.cpp snake.cpp tuple.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 EXECUTABLE = chatroom
 
