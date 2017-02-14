@@ -11,11 +11,14 @@ using namespace std;
 
 class Model
 {
+	//maps snake ID to snakes
 	map<int, Snake> snakes;
+	//keeps track of bonuses
 	vector<Tuple> bonuses;
 	//this->snakes //	 	 = [new Snake(2,2,new Tuple(0,1), 0),//must decide who gets which place
 				//				new Snake(4,4,new Tuple(0,1), 0)];
-	vector<int> score;
+	//ID with score of Snakes			
+	map<int, int> scores;
 	int boardWidth;
 	int boardHeight;
 	bool isRunning;
@@ -23,7 +26,7 @@ class Model
 	public:
 		Model();
 		Model(int boardWidth, int boardHeight);
-		void setScore(vector<int> score);		
+		void setScore(int ID, int score);		
 		vector<int> getIDs();
 		//void setIDs(vector<int> IDs);
 		void addSnake(int ID, Snake snake);

@@ -23,9 +23,9 @@ Model::Model(int boardWidth, int boardHeight)
 	this->isRunning = false;
 }
 
-void Model::setScore(vector<int> score)
+void Model::setScore(int ID, int score)
 {
-	this->score = score;
+	this->scores[ID] = score;
 }
 
 /*vector<int> Model::getIDs()
