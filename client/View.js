@@ -1,4 +1,5 @@
 var viewTest = false;
+var ids = new Map();
 
 function ViewSetup()
 {

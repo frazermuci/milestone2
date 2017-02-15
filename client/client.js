@@ -1,5 +1,5 @@
-var clientAddress = document.getElementById("address").value;
-var clientPort = document.getElementById("port").value;
+var clientAddress = "127.0.0.1";
+var clientPort = "21234";
 
 function Socket(model){
 	this.model = model;

@@ -19,16 +19,17 @@ int count = 0;
 void openHandler(int clientID)
 {
 	ostringstream os;
-	bool isZero = count == 0;
-	os << "init"<<":"<<isZero?"2:2":"4:4";
+	//bool isZero = count == 0;
+	//os << "init"<<":"<<isZero?"2:2":"4:4";
+	os << "init:" << count; 
 	cm.send(clientID, os.str());
-	int x,y = 4;
+	/*int x,y = 4;
 	if(isZero)
 	{
 		x = 2;
 		y = 2;
 	}
-	cm.addSnake(clientID, x, y, Tuple(0,1));
+	cm.addSnake(clientID, x, y, Tuple(0,1));*/
 	++count;
 }
 

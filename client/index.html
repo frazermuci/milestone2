@@ -10,8 +10,9 @@
 			<h1 id="idPrompt">Enter the address and port number :
 			<input type="text" id="address" value="127.0.0.1"/>
 			<input type="text" id="port" value="21234"/>
-			<br/>Enter two ids : <input type="text" id="idfield1" value="0"/>
-			<input type="text" id="idfield2" value="1"/><br/>
+			<!--<br/>Enter two ids : <input type="text" id="idfield1" value="0"/>
+			<input type="text" id="idfield2" value="1"/><br/>-->
+			<br/>Enter an id : <input type="text" id="idfield1" value="0"/><br/>
 			<input type="button" value="Start" onclick="idEntered()"></h1>
 			<h1 id="toptitle">Snake</h1>
 			
@@ -104,14 +105,16 @@
 				clientPort = fieldP.value;
 				var field1 = document.getElementById("idfield1");
 				var id1 = field1.value;
-				var field2 = document.getElementById("idfield2");
-				var id2 = field2.value;
-				var ids = [id1, id2];
+				//var field2 = document.getElementById("idfield2");
+				//var id2 = field2.value;
+				//var ids = [id1, id2];
+				
 				
 				document.getElementById("netInfo").innerHTML = 'Server : '+
-					clientAddress + ':' + clientPort + ' // IDs : '+id1+','+id2;
+					clientAddress + ':' + clientPort; //+ ' // IDs : '+id1+','+id2;
 				
-				getModel().setIds(ids);
+				//getModel().setIds(ids);
+				getModel.snakeID = id1;
 				ControllerNewGame();
 			}
 		

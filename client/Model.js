@@ -6,6 +6,7 @@ function Model(boardWidth,boardHeight, snakeID)
 {
 	this.snakeID		 = snakeID;// idea it gets ID from server and associates that snake
 								   // with local model
+	this.snakeIndex		 = 0;
 	this.bonuses 	 	 = [new Vector(6,5), new Vector(5,6)];
 	this.snakes 	 	 = [new Snake(2,2,new Vector(0,1), 0),
 								new Snake(4,4,new Vector(0,1), 0)];

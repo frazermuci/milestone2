@@ -130,7 +130,7 @@ function ControllerTick()
 function ControllerChangeDirection(vector)
 {
     var m = getModel();
-    m.changeDirection(m.snakeId, vector);
+    m.changeDirection(m.snakeIndex, vector);
 }
 
 function ControllerMainLoop()
