@@ -14,6 +14,7 @@ using namespace std;
 webSocket server;
 ConnectionManager cm = ConnectionManager(&server, 12, 9);//server is not initialized..well see.
 int count = 0;
+map<int, int> clientIDWithConnNum = map<int,int>();
 
 /* called when a client connects */
 void openHandler(int clientID)
@@ -21,7 +22,8 @@ void openHandler(int clientID)
 	ostringstream os;
 	//bool isZero = count == 0;
 	//os << "init"<<":"<<isZero?"2:2":"4:4";
-	os << "init:" << count; 
+	os << "init:" << count;
+	clientIDWithConnNum[clientID] = count;
 	cm.send(clientID, os.str());
 	/*int x,y = 4;
 	if(isZero)
@@ -30,7 +32,7 @@ void openHandler(int clientID)
 		y = 2;
 	}
 	cm.addSnake(clientID, x, y, Tuple(0,1));*/
-	++count;
+	count = count == 0 ? 1 : 0;
 }
 
 /* called when a client disconnects */
@@ -38,7 +40,7 @@ void closeHandler(int clientID)
 {   
 	cm.removeConn(clientID);
 	cm.removeSnake(clientID);
-	--count;
+	count = clientIDWithConnNum[clientID] == 1 ? 1 : 0;
 }
 
 vector<string> parseMessage(string message)
@@ -62,24 +64,30 @@ vector<string> parseMessage(string message)
 	return mVect;
 }
 
-bool isInit(string str)
+bool isInitMessage(string str)
 {
 	return strcmp(str.c_str(), "init") == 0;
 }
+
+void initializeConnection(int clientID, vector<string> mVect)
+{
+	cm.addConn(clientID, atoi(mVect.at(1).c_str()));
+	cout << "init " << clientID << " " << atoi(mVect.at(1).c_str());
+	if(cm.connReady())
+	{
+		cm.newGame();
+		cm.sendIDs();//on client side, wait until "begin"
+	}
+}
+
 /* called when a client sends a message to the server */
 void messageHandler(int clientID, string message)
 {
 		vector<string> mVect = parseMessage(message);
-		if(isInit(mVect.at(0)))
+		if(isInitMessage(mVect.at(0)))
 		{
 			//parse message and get id
-			cm.addConn(clientID, atoi(mVect.at(1).c_str()));
-			cout << "init " << clientID << " " << atoi(mVect.at(1).c_str());
-			if(cm.connReady())
-			{
-				cm.newGame();
-				cm.sendIDs();//on client side, wait until "begin"
-			}
+			initializeConnection(clientID, mVect);
 			return;
 		}
 		if(cm.connReady())
@@ -114,10 +122,10 @@ void periodicHandler(){
 }
 
 int main(int argc, char *argv[]){
-    int port;
+    int port  = "21234";
 
-    cout << "Please set server port: ";
-    cin >> port;
+    //cout << "Please set server port: ";
+    //cin >> port;
 
     /* set event handler */
     server.setOpenHandler(openHandler);
