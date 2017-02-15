@@ -122,10 +122,15 @@ function ControllerTick()
     ViewRefresh();
 }
 
-function ControllerChangeDirection(id, vector)
+/*function ControllerChangeDirection(id, vector)
 {
     var m = getModel();
     m.changeDirection(id, vector);
+}*/
+function ControllerChangeDirection(vector)
+{
+    var m = getModel();
+    m.changeDirection(m.snakeId, vector);
 }
 
 function ControllerMainLoop()

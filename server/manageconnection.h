@@ -12,7 +12,7 @@
 
 typedef struct Compressed
 {
-	int s1Direction;
+	int s1Direction; //1 = UP, 2 = DOWN, 3 = LEFT, 4 = RIGHT
 	bool s1BonusEaten;
 	bool s1Loss;
 	int s1BonusPositionX;
@@ -46,7 +46,8 @@ class ConnectionManager
 		void addSnake(int clientID, int x, int y, Tuple direction);		
 		void removeSnake(int clientID);	
 		bool stateReady(int clientID);		
-		void moveModel();		
+		void moveModel();
+		void newGame();
 		//Compressed compressModel();
 };
 

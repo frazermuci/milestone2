@@ -108,7 +108,7 @@ Tuple dirToVect(int dir)
 void ConnectionManager::updateModel(int ClientID, Compressed c)
 {
 	int ID = this->IDs[ClientID];
-	if(c.bonusEaten)
+	if(c.s1BonusEaten)
 	{
 		Snake snake = this->model.getSnake(ID);
 		vector<Tuple> bonuses = this->model.getBonuses();
@@ -140,6 +140,11 @@ void ConnectionManager::moveModel()
 	this->model.move();
 }
 
+void Model::newGame()
+{
+	this->model.newGame();
+	this->model.isRunning = 1;
+}
 
 int VectToDir(Tuple vect)
 {

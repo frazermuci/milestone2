@@ -76,6 +76,7 @@ void messageHandler(int clientID, string message)
 			cout << "init " << clientID << " " << atoi(mVect.at(1).c_str());
 			if(cm.connReady())
 			{
+				cm.newGame();
 				cm.sendIDs();//on client side, wait until "begin"
 			}
 			return;

@@ -163,3 +163,13 @@ void Model::mode()
 		it->second.move();
 	}
 }
+
+void Model::newGame()
+{
+		this->getSnake(0).resetSnake(2,2,Tuple(1,0));
+		this->getSnake(1).resetSnake(9,7, Tuple(-1,0));
+		this->bonuses[0] =  Tuple(7,2);
+		this->bonuses[1] = Tuple(4,7);
+		this->score[0] = 0;
+		this->score[1] = 0;
+}

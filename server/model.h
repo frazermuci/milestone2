@@ -43,6 +43,7 @@ class Model
 		void setIsRunning(bool isRunning);
 		bool getIsRunning();
 		void move();
+		void newGame();
 }; 
 
 #endif
