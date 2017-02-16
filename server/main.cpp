@@ -14,7 +14,7 @@ using namespace std;
 webSocket server;
 ConnectionManager cm = ConnectionManager(&server, 12, 9);//server is not initialized..well see.
 int count = 0;
-map<int, int> clientIDWithConnNum = map<int,int>();
+
 
 /* called when a client connects */
 void openHandler(int clientID)
@@ -23,7 +23,7 @@ void openHandler(int clientID)
 	//bool isZero = count == 0;
 	//os << "init"<<":"<<isZero?"2:2":"4:4";
 	os << "init:" << count;
-	clientIDWithConnNum[clientID] = count;
+	cm.connNumWithClientID(clientID, count);
 	cm.send(clientID, os.str());
 	/*int x,y = 4;
 	if(isZero)
@@ -99,7 +99,8 @@ void messageHandler(int clientID, string message)
 		{			
 			//serializing new state
 			cm.moveModel();
-			cout << "sendAll\n";//cm.sendAll(cm.serializeModel());
+			cm.sendAll(cm.serialize());
+			cout << "sendAll\n";
 		}
 }
 
@@ -122,7 +123,7 @@ void periodicHandler(){
 }
 
 int main(int argc, char *argv[]){
-    int port  = "21234";
+    int port  = 21234;
 
     //cout << "Please set server port: ";
     //cin >> port;

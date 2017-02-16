@@ -17,7 +17,7 @@ class Model
 	vector<Tuple> bonuses;
 	//this->snakes //	 	 = [new Snake(2,2,new Tuple(0,1), 0),//must decide who gets which place
 				//				new Snake(4,4,new Tuple(0,1), 0)];
-	//ID with score of Snakes			
+	//Map SnakeID with score of Snakes			
 	map<int, int> scores;
 	int boardWidth;
 	int boardHeight;

@@ -31,9 +31,12 @@ class ConnectionManager
 	map<int,int> IDs;// = map<int,int>();//if client disconnects and reconnects, it will cause state	
 	//map<int,int> stateReady;//= map<int, int>();							//to revert
 	map<int, bool> state;
+	map<int, int> clientIDWithConnNum;
+	Compress c;
 	
 	public: 
-		ConnectionManager(webSocket *server, int width, int height);		
+		ConnectionManager(webSocket *server, int width, int height);
+		void connNumWithClientID(int clientID, int connNum);
 		bool connReady();		
 		void addConn(int ID, int snakeID);		
 		void removeConn(int ID);		
@@ -49,6 +52,7 @@ class ConnectionManager
 		void moveModel();
 		void newGame();
 		//Compressed compressModel();
+		char* serialize();
 };
 
 #endif

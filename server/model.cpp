@@ -11,13 +11,14 @@ Model::Model(int boardWidth, int boardHeight)
 {
 	this->snakes = map<int, Snake>();	
 	this->bonuses = vector<Tuple>();
-	this->score = vector<int>();
+	//this->score = vector<int>();
+	this->scores = map<int, int>();
 	this->boardWidth  = boardWidth;
 	this->boardHeight = boardHeight;
 	this->bonuses.push_back(Tuple(6,5));
 	this->bonuses.push_back(Tuple(5,6));
-	this->score.push_back(0);
-	this->score.push_back(0);
+	//this->score.push_back(0);
+	//this->score.push_back(0);
 	//setting snakes requires the server to 
 	//decide which client gets put at which place
 	this->isRunning = false;
@@ -83,6 +84,7 @@ void Model::growSnake(int ID)
 	Snake s = this->getSnake(ID);
 	Tuple v = s.getHead().add(s.getDirection());
 	s.addBody(v);
+	this->scores[ID] = this->scores[ID] + 100;
 }
 
 void Model::changeDirection(int ID, Tuple dir)
@@ -155,10 +157,10 @@ bool Model::getIsRunning()
 	return this->isRunning;
 }
 	
-void Model::mode()
+void Model::move()
 {
 	map<int, Snake>::iterator it;
-	for(it = this->snakes.begin(); it!=this->snakes.end();++i)
+	for(it = this->snakes.begin(); it!=this->snakes.end();++it)
 	{
 		it->second.move();
 	}
@@ -170,6 +172,4 @@ void Model::newGame()
 		this->getSnake(1).resetSnake(9,7, Tuple(-1,0));
 		this->bonuses[0] =  Tuple(7,2);
 		this->bonuses[1] = Tuple(4,7);
-		this->score[0] = 0;
-		this->score[1] = 0;
 }
