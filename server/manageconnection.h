@@ -32,7 +32,7 @@ class ConnectionManager
 	//map<int,int> stateReady;//= map<int, int>();							//to revert
 	map<int, bool> state;
 	map<int, int> clientIDWithConnNum;
-	Compress c;
+	Compressed c;
 	
 	public: 
 		ConnectionManager(webSocket *server, int width, int height);

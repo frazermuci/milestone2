@@ -59,7 +59,7 @@ void Snake::move()
 		this->body.at(i).setX(this->body.at(i-1).getX());
 		this->body.at(i).setY(this->body.at(i-1).getY());
 	}
-	head.add(this->direction);//review
+	this->body.at(0)=head.add(this->direction);//review
 }
 
 int Snake::getID()
