@@ -186,7 +186,11 @@ void ConnectionManager::removeSnake(int clientID)
 
 void ConnectionManager::moveModel()
 {
-	this->model.move();
+	map<int, int>::iterator it;
+	for(it = this->IDs.begin(); it != this->IDs.end(); ++it)
+	{
+		this->model.growSnake(this->clientIDWithConnNum[it->first]);
+	}
 }
 
 void ConnectionManager::newGame()

@@ -84,7 +84,6 @@ void Model::growSnake(int ID)
 	Snake s = this->getSnake(ID);
 	Tuple v = s.getHead().add(s.getDirection());
 	s.addBody(v);
-	this->scores[ID] = this->scores[ID] + 100;
 }
 
 void Model::changeDirection(int ID, Tuple dir)

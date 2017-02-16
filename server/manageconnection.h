@@ -12,7 +12,7 @@
 
 typedef struct Compressed
 {
-	int s1Direction; //1 = UP, 2 = DOWN, 3 = LEFT, 4 = RIGHT
+	int s1Direction;
 	bool s1BonusEaten;
 	bool s1Loss;
 	int s1BonusPositionX;
