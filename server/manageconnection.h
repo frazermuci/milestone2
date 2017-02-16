@@ -34,6 +34,9 @@ class ConnectionManager
 	map<int, int> clientIDWithConnNum;
 	Compressed c;
 	
+	void handleS1(int ID, Compressed c);
+	void handleS2(int ID, Compressed c);
+	
 	public: 
 		ConnectionManager(webSocket *server, int width, int height);
 		void connNumWithClientID(int clientID, int connNum);
@@ -43,8 +46,7 @@ class ConnectionManager
 		void sendState();		
 		void send(int clientID, string message);		
 		void sendAll(string message);		
-		void sendIDs();		
-		string serializeModel();		
+		void sendIDs();			
 		void updateModel(int clientID, Compressed c);		
 		void addSnake(int clientID, int x, int y, Tuple direction);		
 		void removeSnake(int clientID);	
@@ -52,7 +54,7 @@ class ConnectionManager
 		void moveModel();
 		void newGame();
 		//Compressed compressModel();
-		char* serialize();
+		unsigned char* serialize();
 };
 
 #endif

@@ -21,7 +21,7 @@ ConnectionManager::ConnectionManager(webSocket *server, int width, int height)
 
 void ConnectionManager::connNumWithClientID(int clientID, int connNum)
 {
-	this->clientIDWithConnNum[ClientID] = connNum;
+	this->clientIDWithConnNum[clientID] = connNum;
 }
 
 bool ConnectionManager::connReady()
@@ -112,52 +112,52 @@ Tuple dirToVect(int dir)
 }
 
 
-void handleS1(int ID, Compressed c, ConnectionManager* cm)
+void ConnectionManager::handleS1(int ID, Compressed c)
 {
-	Snake snake = cm->model.getSnake(ID);
-	vector<Tuple> bonuses = cm->model.getBonuses();
+	Snake snake = this->model.getSnake(ID);
+	vector<Tuple> bonuses = this->model.getBonuses();
 	if(c.s1BonusEaten)
 	{
 		for(int i = 0; i < bonuses.size(); ++i)
 		{
 			if(snake.getHead() == bonuses.at(i))//don't know if get head is appropriate
 			{
-				cm->model.makeBonus(i);
+				this->model.makeBonus(i);
 				break;
 			}
 		}
-		model->growSnake(ID);
+		this->model.growSnake(ID);
 	}
-	cm->changeDirection(ID, dirToVect(c.s1Direction));
-	cm->c.s1Direction  = c.s1Direction;
-	cm->c.s1BonusEaten = c.s1BonusEaten;
-	cm->c.s1Loss		  = c.s1Loss;
-	cm->c.s1BonusPositionX = c.s1BonusPositionX;
-	cm->c.s1BonusPositionY = c.s1BonusPositionY;
+	this->model.changeDirection(ID, dirToVect(c.s1Direction));
+	this->c.s1Direction  = c.s1Direction;
+	this->c.s1BonusEaten = c.s1BonusEaten;
+	this->c.s1Loss		  = c.s1Loss;
+	this->c.s1BonusPositionX = c.s1BonusPositionX;
+	this->c.s1BonusPositionY = c.s1BonusPositionY;
 }
 
-void handleS1(int ID, Compressed c, ConnectionManager* cm)
+void ConnectionManager::handleS2(int ID, Compressed c)
 {
-	Snake snake = cm->model.getSnake(ID);
-	vector<Tuple> bonuses = cm->model.getBonuses();
+	Snake snake = this->model.getSnake(ID);
+	vector<Tuple> bonuses = this->model.getBonuses();
 	if(c.s2BonusEaten)
 	{
 		for(int i = 0; i < bonuses.size(); ++i)
 		{
 			if(snake.getHead() == bonuses.at(i))//don't know if get head is appropriate
 			{
-				cm->model.makeBonus(i);
+				this->model.makeBonus(i);
 				break;
 			}
 		}
-		model->growSnake(ID);
+		this->model.growSnake(ID);
 	}
-	cm->changeDirection(ID, dirToVect(c.s2Direction));
-	cm->c.s2Direction  = c.s2Direction;
-	cm->c.s2BonusEaten = c.s2BonusEaten;
-	cm->c.s2Loss		  = c.s2Loss;
-	cm->c.s2BonusPositionX = c.s2BonusPositionX;
-	cm->c.s2BonusPositionY = c.s2BonusPositionY;
+	this->model.changeDirection(ID, dirToVect(c.s2Direction));
+	this->c.s2Direction  = c.s2Direction;
+	this->c.s2BonusEaten = c.s2BonusEaten;
+	this->c.s2Loss		  = c.s2Loss;
+	this->c.s2BonusPositionX = c.s2BonusPositionX;
+	this->c.s2BonusPositionY = c.s2BonusPositionY;
 }
 
 void ConnectionManager::updateModel(int clientID, Compressed c)
@@ -166,11 +166,11 @@ void ConnectionManager::updateModel(int clientID, Compressed c)
 	
 	if(this->clientIDWithConnNum[clientID] == 0)
 	{//S1		
-		handleS1(ID, c, this);
+		this->handleS1(ID, c);
 	}
 	else
 	{//S2
-		handleS2(ID, c, this);
+		this->handleS2(ID, c);
 	}
 }
 
@@ -249,9 +249,9 @@ void ConnectionManager::newGame()
 	//return c;
 }*/
 
-char* ConnectionManager::serialize()
+unsigned char* ConnectionManager::serialize()
 {
-    unsigned char* s = malloc(sizeof(char)*4);
+    unsigned char* s = static_cast<unsigned char*>(malloc(sizeof(unsigned char)*4));
     int i = 1;
     
     s[0] = 0;
