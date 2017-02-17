@@ -188,18 +188,10 @@ void ConnectionManager::handleS2(int ID, Compressed c)
 	this->c.s2BonusPositionY = c.s2BonusPositionY;
 }
 
-void ConnectionManager::updateModel(int clientID, Compressed c)
+void ConnectionManager::updateModel(int clientID, int newDir)
 {
 	int ID = this->clientIDWithConnNum[clientID];
-	
-	if(ID == 0)
-	{//S1		
-		this->handleS1(ID, c);
-	}
-	else
-	{//S2
-		this->handleS2(ID, c);
-	}
+	this->model.changeDirection(ID, dirToVect(newDir));
 }
 
 void ConnectionManager::addSnake(int clientID, int x, int y, Tuple direction)
@@ -214,23 +206,9 @@ void ConnectionManager::removeSnake(int clientID)
 	this->model.removeSnake(connNum);
 }
 
-void ConnectionManager::moveModel()
-{
-	map<int, int>::iterator it;
-	for(it = this->IDs.begin(); it != this->IDs.end(); ++it)
-	{
-		cout << "connNum: " << this->clientIDWithConnNum[it->first] << endl;
-		this->model.growSnake(this->clientIDWithConnNum[it->first]);
-	}
-}
 
-void ConnectionManager::newGame()
-{
-	this->model.newGame();
-	//this->model.isRunning = 1;
-}
 
-/*int vectToDir(Tuple vect)
+int vectToDir(Tuple vect)
 {
 	if(vect.getX()!= 0)
 	{
@@ -240,7 +218,112 @@ void ConnectionManager::newGame()
 	{
 		return vect.getY() == 1 ? 1 : 2;
 	}
-}*/
+}
+
+void ConnectionManager::moveModel(Compressed* c)
+{
+	
+
+    // Grow both snakes
+    this->model.growSnake(0);
+    this->model.growSnake(1);
+
+    Snake* snake1 = this->model.getSnake(0);
+    Snake* snake2 = this->model.getSnake(1);
+
+    Tuple head1 = snake1.getHead();
+    Tuple head2 = snake2.getHead();
+
+    vector<Tuple> body1 = snake1.getBody();
+    vector<Tuple> = snake2.getBody();
+
+    // Check collision for snakes
+    bool lose1 = false;
+    bool lose2 = false;
+
+    // Heads colliding
+    /*if(head1.equals(head2))
+    {
+        lose1 = true;
+        lose2 = true;
+    }*/
+
+    // Out of the board
+    if(!(head1.getX() >= 0 && head1.getX() < this->model.getBoardWidth() && head1.getY() >= 0 && head1.getY() < this->model.getBoardHeight()))
+        lose1 = true;
+    if(!(head2.getX() >= 0 && head2.getX() < this->model.getBoardWidth() && head2.getY() >= 0 && head2.getY() < this->model.getBoardHeight()))
+        lose2 = true;
+
+    // Colliding with other snake
+    for(int i = 0; i < body1.size(); i++)
+    {
+        if(head2 == body1[i])
+            lose2=true;
+    }
+    for(int i = 0; i < body2.size(); i++)
+    {
+        if(head1 == body2[i])
+            lose1=true;
+    }
+
+    // Colliding with yourself
+    for(var i = 1; i < body1.length; i++)
+    {
+        if(head1 == body1[i])
+            lose1=true;
+    }
+    for(var i = 1; i < body2.length; i++)
+    {
+        if(head2 == body2[i])
+            lose2=true;
+    }
+	
+	c->s1Dir = vectToDir(snake1->getDirection());
+	c->s2Dir = vectToDir(snake2->getDirection());
+	c->s1Loss = lose1;
+	c->s2Loss = lose2;
+	c->s1BonusEaten = false;
+	c->s2BonusEaten = false;
+	
+	
+    // Check bonus (head at bonus position)
+	vector<Tuple> bonuses = this->model.getBonuses();
+    for(var i = 0; i < bonuses.length; i++)
+	{
+		if(head1.equals(bonuses[i]))
+		{
+			snake1->eatBonus();
+			Tuple newB = this->model.makeBonus(i);
+			c->s1BonusEaten = true;
+			c->s1BonusPositionX = newB.getX();
+			c->s1BonusPositionY = newB.getY();
+		}
+		if(head2.equals(bonuses[i]))
+		{
+			snake2->eatBonus();
+			Tuple newB = this->model.makeBonus(i);
+			c->s2BonusEaten = true;
+			c->s2BonusPositionX = newB.getX();
+			c->s2BonusPositionY = newB.getY();
+		}
+	}
+	
+	//c->s1Dir = 
+	
+	/*
+	map<int, int>::iterator it;
+	for(it = this->IDs.begin(); it != this->IDs.end(); ++it)
+	{
+		cout << "connNum: " << this->clientIDWithConnNum[it->first] << endl;
+		this->model.growSnake(this->clientIDWithConnNum[it->first]);
+	}*/
+}
+
+void ConnectionManager::newGame()
+{
+	this->model.newGame();
+	//this->model.isRunning = 1;
+}
 
 /*int findClientByConnNum(int connNum)
 {

@@ -93,14 +93,19 @@ void messageHandler(int clientID, string message)
 		if(cm.connReady())
 		{
 			//update model from message
-			cout << "desrialize" << endl;//cm.updateModel(deserialize(message));	
+			cout << "desrialize" << endl;
+			cm.updateModel(deserialize(message));	
 		}
 		if(cm.stateReady(clientID))
 		{			
 			//serializing new state
-			cm.moveModel();
-			cm.sendAll(cm.serialize());
+			Compressed c = malloc(sizeof(struct Compressed));
+			
+			cm.moveModel(&c);
+			cm.sendAll(cm.serialize(&c));
 			cout << "sendAll\n";
+			
+			free(c);
 		}
 }
 

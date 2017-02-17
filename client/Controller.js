@@ -117,9 +117,9 @@ function ControllerTick()
 
 		}
 	}
-	
 	// Increment Clock
     ViewRefresh();
+	sendMessage(serialize(getModel()));
 }
 
 /*function ControllerChangeDirection(id, vector)

@@ -142,7 +142,7 @@ bool objectInTheWay(Model m, int x, int y)
 	return false;
 }
 	
-void Model::makeBonus(int bpos)
+Tuple Model::makeBonus(int bpos)
 {
 	srand(time(NULL));
 	int x = floor(rand() * this->boardWidth);
@@ -153,6 +153,7 @@ void Model::makeBonus(int bpos)
 		y = floor(rand() * this->boardHeight);
 	}
 	this->bonuses.at(bpos) = Tuple(x,y);
+	return new Tuple(x,y);
 }
 
 int Model::getBoardWidth()

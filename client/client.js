@@ -26,7 +26,7 @@ function Socket(model){
 			console.log("init:"+ids[0]+":"+ids[1]);
 			this.connection.send("init:"+ids[0]+":"+ids[1]);
 		}
-		if (array[0] == "init"
+		if (array[0] == "init")
 		{
 			array[1] = model.snakeID;
 			sendMessage("init:" + model.snakeID);
@@ -34,7 +34,6 @@ function Socket(model){
 		else 
 		{
 			deserialize(array[0]);
-			sendMessage(serialize(model));
 		}
 		console.log(e.data)
 		//{
@@ -54,17 +53,17 @@ function Socket(model){
 	
 	this.deserialize = function(s)
 	{
-		var a = s[0];
-		var s1Dir = Vector(1,0);
-		var s1Bonus = false;
-		var s1Loss = false;
-		var s2Dir=Vector(1,0);
-		var s2Bonus=false;
-		var s2Loss=false;
-		var s1BonusX = 0;
-		var s1BonusY = 0;
-		var s2BonusX = 0;
-		var s2BonusY = 0;
+    var a = s[0];
+    var s1Dir = Vector(1,0);
+    var s1Bonus = false;
+    var s1Loss = false;
+    var s2Dir=Vector(1,0);
+    var s2Bonus=false;
+    var s2Loss=false;
+    var s1BonusX = 0;
+    var s1BonusY = 0;
+    var s2BonusX = 0;
+    var s2BonusY = 0;
     
     // s1Dir s1Dir s1Bonus s1Loss s2Dir s2Dir s2Bonus s2Loss
     if(a > 127)
@@ -151,7 +150,9 @@ function Socket(model){
         s2BonusX = (c-s2BonusY)/16;
         i++;
     }
-	 getModel().changeDirection(0, s1Dir);
+    
+    // SET TO MODEL
+    getModel().changeDirection(0, s1Dir);
     getModel().changeDirection(1, s2Dir);
     getModel().growSnake(0);
     getModel().growSnake(1);
@@ -168,6 +169,26 @@ function Socket(model){
         
         getModel().setBonus(bonusToChange,newBonusPos);
     }
+    if(s2Bonus)
+    {
+        getModel().getSnake(1).eatBonus();
+        
+        var bonusToChange = 1;
+        var newBonusPos = Vector(s2BonusX, s2BonusY);
+        var snake1Head = getModel().getSnake(0).getHead();
+        
+        if(snake1Head.equals(getModel.getBonusPos(0)))
+            bonusToChange = 0;
+        
+        getModel().setBonus(bonusToChange,newBonusPos);
+    }
+    
+    if(lose1 && lose2)
+        ControllerTie();
+    else if(lose1)
+        ControllerWin(2);
+    else if(lose2)
+        ControllerWin(1);
 	}
 	
 	this.serialize = function(model)
