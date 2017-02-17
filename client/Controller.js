@@ -33,6 +33,8 @@ function ControllerWin(id)
 
 function ControllerTick()
 {
+	sendMessage(serialize(getModel()));
+	
     var m = getModel();
 
     // Grow both snakes
@@ -119,7 +121,7 @@ function ControllerTick()
 	}
 	// Increment Clock
     ViewRefresh();
-	sendMessage(serialize(getModel()));
+	
 }
 
 /*function ControllerChangeDirection(id, vector)
