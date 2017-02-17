@@ -40,7 +40,7 @@ void closeHandler(int clientID)
 {   
 	cm.removeConn(clientID);
 	cm.removeSnake(clientID);
-	count = clientIDWithConnNum[clientID] == 1 ? 1 : 0;
+	count = cm.getConnNum(clientID) == 1 ? 1 : 0;
 }
 
 vector<string> parseMessage(string message)

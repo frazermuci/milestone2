@@ -40,6 +40,7 @@ class ConnectionManager
 	public: 
 		ConnectionManager(webSocket *server, int width, int height);
 		void connNumWithClientID(int clientID, int connNum);
+		int getConnNum(int clientID);
 		bool connReady();		
 		void addConn(int ID, int snakeID);		
 		void removeConn(int ID);		

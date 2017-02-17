@@ -24,6 +24,11 @@ void ConnectionManager::connNumWithClientID(int clientID, int connNum)
 	this->clientIDWithConnNum[clientID] = connNum;
 }
 
+int ConnectionManager::getConnNum(int clientID)
+{
+	return this->clientIDWithConnNum[clientID];
+}
+
 bool ConnectionManager::connReady()
 {
 	return this->IDs.size() == 2;//means it won't work for more than 2

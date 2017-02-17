@@ -17,6 +17,10 @@ Model::Model(int boardWidth, int boardHeight)
 	this->boardHeight = boardHeight;
 	this->bonuses.push_back(Tuple(6,5));
 	this->bonuses.push_back(Tuple(5,6));
+	
+		
+	this->snakes[0] = Snake(2,2,Tuple(1,0),0);
+	this->snakes[1] = Snake(4,4,Tuple(1,0),1);
 	//this->score.push_back(0);
 	//this->score.push_back(0);
 	//setting snakes requires the server to 
