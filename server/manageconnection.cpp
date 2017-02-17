@@ -2,6 +2,7 @@
 #include "manageconnection.h"
 #include "websocket.h"
 #include <sstream>
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
@@ -12,13 +13,35 @@ using namespace std;
 ConnectionManager::ConnectionManager(webSocket *server, int width, int height)
 {
 	this->server = server;
-	this->IDs = map<int,int>();//if client disconnects and reconnects, it will cause state	
-	//this->stateReady = map<int, int>();	
+	this->IDs = map<int,int>();//if client disconnects and reconnects, it will cause state
 	this->state = map<int,bool>();
 	this->model	 = Model(width, height); 
 	this->clientIDWithConnNum = map<int,int>();
 }
 
+void ConnectionManager::printIDs()
+{
+	map<int,int>::iterator it;
+	for(it = this->IDs.begin(); it != this->IDs.end(); ++it)
+	{
+		cout << "clientID: " << it->first << " UserID: " << it->second << endl;
+	}
+}
+
+void ConnectionManager::printPos()
+{
+	vector<Snake*> snakes = model.getSnakes();
+	for(vector<Snake*>::iterator it = snakes.begin(); it != snakes.end(); ++it)
+	{
+		vector<Tuple> bod = (*it)->getBody();
+		cout << "snake: " << endl;
+		for(vector<Tuple>::iterator inner = bod.begin(); inner != bod.end(); ++inner)
+		{
+			cout << "x: "<<inner->getX() << " y: " << inner->getY() << endl;
+		}
+		cout << endl;
+	}
+}
 void ConnectionManager::connNumWithClientID(int clientID, int connNum)
 {
 	this->clientIDWithConnNum[clientID] = connNum;
@@ -119,13 +142,13 @@ Tuple dirToVect(int dir)
 
 void ConnectionManager::handleS1(int ID, Compressed c)
 {
-	Snake snake = this->model.getSnake(ID);
+	Snake* snake = this->model.getSnake(ID);
 	vector<Tuple> bonuses = this->model.getBonuses();
 	if(c.s1BonusEaten)
 	{
 		for(int i = 0; i < bonuses.size(); ++i)
 		{
-			if(snake.getHead() == bonuses.at(i))//don't know if get head is appropriate
+			if(snake->getHead() == bonuses.at(i))//don't know if get head is appropriate
 			{
 				this->model.makeBonus(i);
 				break;
@@ -143,13 +166,13 @@ void ConnectionManager::handleS1(int ID, Compressed c)
 
 void ConnectionManager::handleS2(int ID, Compressed c)
 {
-	Snake snake = this->model.getSnake(ID);
+	Snake* snake = this->model.getSnake(ID);
 	vector<Tuple> bonuses = this->model.getBonuses();
 	if(c.s2BonusEaten)
 	{
 		for(int i = 0; i < bonuses.size(); ++i)
 		{
-			if(snake.getHead() == bonuses.at(i))//don't know if get head is appropriate
+			if(snake->getHead() == bonuses.at(i))//don't know if get head is appropriate
 			{
 				this->model.makeBonus(i);
 				break;
@@ -182,7 +205,7 @@ void ConnectionManager::updateModel(int clientID, Compressed c)
 void ConnectionManager::addSnake(int clientID, int x, int y, Tuple direction)
 {
 	int connNum = this->clientIDWithConnNum[clientID];
-	this->model.addSnake(connNum, Snake(x, y, direction, connNum));
+	this->model.addSnake(connNum, new Snake(x, y, direction, connNum));
 }
 		
 void ConnectionManager::removeSnake(int clientID)
@@ -196,6 +219,7 @@ void ConnectionManager::moveModel()
 	map<int, int>::iterator it;
 	for(it = this->IDs.begin(); it != this->IDs.end(); ++it)
 	{
+		cout << "connNum: " << this->clientIDWithConnNum[it->first] << endl;
 		this->model.growSnake(this->clientIDWithConnNum[it->first]);
 	}
 }

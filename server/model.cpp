@@ -1,4 +1,5 @@
 #include "model.h"
+#include <iostream>
 #include <math.h>
 #include <time.h>
 #include <stdlib.h>  
@@ -9,7 +10,7 @@ Model::Model()
 
 Model::Model(int boardWidth, int boardHeight)
 {
-	this->snakes = map<int, Snake>();
+	this->snakes = map<int, Snake*>();	
 	this->bonuses = vector<Tuple>();
 	//this->score = vector<int>();
 	this->scores = map<int, int>();
@@ -19,13 +20,23 @@ Model::Model(int boardWidth, int boardHeight)
 	this->bonuses.push_back(Tuple(5,6));
 	
 		
-	this->snakes[0] = Snake(2,2,Tuple(1,0),0);
-	this->snakes[1] = Snake(4,4,Tuple(1,0),1);
+	this->snakes[0] =  new Snake(2,2,Tuple(1,0),0);
+	this->snakes[1] =  new Snake(4,4,Tuple(1,0),1);
 	//this->score.push_back(0);
 	//this->score.push_back(0);
 	//setting snakes requires the server to 
 	//decide which client gets put at which place
 	this->isRunning = false;
+}
+
+Model::~Model()
+{
+	/*map<int, Snake*>::iterator it;
+	for (it = this->snakes.begin(); it != this->snakes.end(); it++)
+	{
+		delete it->second;
+	}*/
+	;
 }
 
 void Model::setScore(int ID, int score)
@@ -43,29 +54,33 @@ void Model::setScore(int ID, int score)
 	this->IDs = IDs;
 }*/
 
-void Model::addSnake(int ID, Snake snake)
+void Model::addSnake(int ID, Snake* snake)
 {
 	this->snakes[ID] = snake;
 }
 
 void Model::removeSnake(int ID)
 {
-	map<int, Snake> sMap = map<int, Snake>();
-	map<int, Snake>::iterator it;
+	map<int, Snake*> sMap = map<int, Snake*>();
+	map<int, Snake*>::iterator it;
     for (it = this->snakes.begin(); it != this->snakes.end(); it++)
 	{
 		if(ID != it->first)
 		{
 			sMap[it->first] = it->second;
 		}
+		else
+		{
+			delete this->snakes[it->first];
+		}
 	}
 	this->snakes = sMap;
 }
 
-vector<Snake> Model::getSnakes()
+vector<Snake*> Model::getSnakes()
 {
-	vector<Snake> sVect = vector<Snake>();
-	map<int, Snake>::iterator it;
+	vector<Snake*> sVect = vector<Snake*>();
+	map<int, Snake*>::iterator it;
     for (it = this->snakes.begin(); it != this->snakes.end(); it++)
 	{
 		sVect.push_back(it->second);
@@ -73,7 +88,7 @@ vector<Snake> Model::getSnakes()
 	return sVect;
 }
 
-Snake Model::getSnake(int ID)
+Snake* Model::getSnake(int ID)
 {
 	return this->snakes[ID];
 }
@@ -85,14 +100,15 @@ int Model::getNumberSnakes()
 
 void Model::growSnake(int ID)
 {
-	Snake s = this->getSnake(ID);
-	Tuple v = s.getHead().add(s.getDirection());
-	s.addBody(v);
+	Snake* s = this->getSnake(ID);
+	cout << "s Head: " << s->getHead().getX() << endl;
+	Tuple v = s->getHead().add(s->getDirection());
+	s->addBody(v);
 }
 
 void Model::changeDirection(int ID, Tuple dir)
 {
-	Snake s = this->getSnake(ID);
+	Snake s = *this->getSnake(ID);
 	s.changeDirection(dir); 
 }
 
@@ -103,10 +119,10 @@ vector<Tuple> Model::getBonuses()
 
 bool objectInTheWay(Model m, int x, int y)
 {
-	vector<Snake> sVect =  m.getSnakes();
+	vector<Snake*> sVect =  m.getSnakes();
 	for(int i = 0; i < sVect.size(); ++i)
 	{
-		vector<Tuple> body = sVect.at(i).getBody();
+		vector<Tuple> body = sVect.at(i)->getBody();
 		for(int j = 0; j < body.size(); ++j)
 		{
 			if(body.at(j) == Tuple(x, y))
@@ -162,17 +178,18 @@ bool Model::getIsRunning()
 	
 void Model::move()
 {
-	map<int, Snake>::iterator it;
+	map<int, Snake*>::iterator it;
 	for(it = this->snakes.begin(); it!=this->snakes.end();++it)
 	{
-		it->second.move();
+		this->growSnake(it->first);
+		//it->second.move();
 	}
 }
 
 void Model::newGame()
 {
-		this->getSnake(0).resetSnake(2,2,Tuple(1,0));
-		this->getSnake(1).resetSnake(9,7, Tuple(-1,0));
+		this->getSnake(0)->resetSnake(2,2,Tuple(1,0));
+		this->getSnake(1)->resetSnake(9,7, Tuple(-1,0));
 		this->bonuses[0] =  Tuple(7,2);
 		this->bonuses[1] = Tuple(4,7);
 }

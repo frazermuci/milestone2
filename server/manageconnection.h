@@ -44,6 +44,8 @@ class ConnectionManager
 		void connNumWithClientID(int clientID, int connNum);
 		int getConnNum(int clientID);
 		bool connReady();		
+		void printIDs();
+		void printPos();
 		void addConn(int ID, int snakeID);		
 		void removeConn(int ID);		
 		void sendState();		
