@@ -9,8 +9,7 @@ Model::Model()
 
 Model::Model(int boardWidth, int boardHeight)
 {
-	this->snakes = map<int, Snake>();	
-	this->snakes = vector<Snake>();
+	this->snakes = map<int, Snake>();
 	this->bonuses = vector<Tuple>();
 	//this->score = vector<int>();
 	this->scores = map<int, int>();
