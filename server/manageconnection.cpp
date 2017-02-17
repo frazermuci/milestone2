@@ -167,9 +167,9 @@ void ConnectionManager::handleS2(int ID, Compressed c)
 
 void ConnectionManager::updateModel(int clientID, Compressed c)
 {
-	int ID = this->IDs[clientID];
+	int ID = this->clientIDWithConnNum[clientID];
 	
-	if(this->clientIDWithConnNum[clientID] == 0)
+	if(ID == 0)
 	{//S1		
 		this->handleS1(ID, c);
 	}
@@ -181,12 +181,14 @@ void ConnectionManager::updateModel(int clientID, Compressed c)
 
 void ConnectionManager::addSnake(int clientID, int x, int y, Tuple direction)
 {
-	this->model.addSnake(this->IDs[clientID], Snake(x, y, direction, this->IDs[clientID]));
+	int connNum = this->clientIDWithConnNum[clientID];
+	this->model.addSnake(connNum, Snake(x, y, direction, connNum));
 }
 		
 void ConnectionManager::removeSnake(int clientID)
 {
-	this->model.removeSnake(this->IDs[clientID]);
+	int connNum = this->clientIDWithConnNum[clientID];
+	this->model.removeSnake(connNum);
 }
 
 void ConnectionManager::moveModel()

@@ -11,7 +11,7 @@ using namespace std;
 
 class Model
 {
-	//maps snake ID to snakes
+	//snake num to snakes
 	map<int, Snake> snakes;
 	//keeps track of bonuses
 	vector<Tuple> bonuses;
