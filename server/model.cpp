@@ -101,7 +101,6 @@ int Model::getNumberSnakes()
 void Model::growSnake(int ID)
 {
 	Snake* s = this->getSnake(ID);
-	cout << "s Head: " << s->getHead().getX() << endl;
 	Tuple v = s->getHead().add(s->getDirection());
 	s->addBody(v);
 }
