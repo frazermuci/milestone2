@@ -93,12 +93,12 @@ bool ready(map<int,bool> state)
 bool ConnectionManager::stateReady(int clientID)
 {
 	this->state[clientID] = true;
-	
-	if(ready(this->state))
+	bool r = ready(this->state);
+	if(r)
 	{
 		this->state = map<int,bool>();
 	}
-	return ready(this->state);
+	return r;
 }
 
 Tuple dirToVect(int dir)

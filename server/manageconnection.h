@@ -28,9 +28,11 @@ class ConnectionManager
 {
 	webSocket* server;
 	Model model;
-	map<int,int> IDs;// = map<int,int>();//if client disconnects and reconnects, it will cause state	
-	//map<int,int> stateReady;//= map<int, int>();							//to revert
+	//maps clientID to snakeID
+	map<int,int> IDs;						
+	//state, checks if both clients have sent in their state before progressing
 	map<int, bool> state;
+	//maps clientID with snakeNumber/ConnectionNumber (i.e. 0 or 1)
 	map<int, int> clientIDWithConnNum;
 	Compressed c;
 	
