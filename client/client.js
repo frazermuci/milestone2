@@ -2,6 +2,7 @@ var clientAddress = "127.0.0.1";
 var clientPort = "21234";
 
 function Socket(model){
+	console.log("hello");
 	this.model = model;
 	this.connection = new WebSocket('ws://'+clientAddress+':'+clientPort, ['soap', 'xmpp']);
 	
@@ -13,7 +14,11 @@ function Socket(model){
 	this.connection.onerror = function (error) {
 		console.log('WebSocket Error ' + error);
 	};
-
+	
+	this.sendMessage = function(inc)
+	{
+		this.connection.send(inc);
+	}
 // Log messages from the server
 	this.connection.onmessage = (e)=> {
 		//this is in scope?
@@ -28,16 +33,20 @@ function Socket(model){
 		} */
 		if (array[0] == "init")
 		{
+			console.log("init");
 			//array[1] = model.snakeID;
-			sendMessage("init:" + model.snakeID);
+			this.sendMessage("init:" + model.snakeID);
 		}
 		else if(array[0] == "start")
 		{
 			parseInt(array[1]);
+			getModel().snakeIndex = parseInt(array[2]);
+			window.setTimeout(ControllerTick, 750);
 		}
 		else 
 		{
 			deserialize(array[0]);
+			window.setTimeout(ControllerTick, 750);
 		}
 		console.log(e.data)
 		//{
@@ -49,10 +58,6 @@ function Socket(model){
 		//this.model.setScore(this.scoreArray);
 		this.count =0;
 		ViewRefresh();
-	}
-	this.sendMessage = function(inc)
-	{
-		this.connection.send(inc);
 	}
 	
 	this.deserialize = function(s)
@@ -198,7 +203,7 @@ function Socket(model){
 	this.serialize = function(model)
 	{
 		
-    var snake = getModel().getSnake(model.snakeID); // TODO NEEDS TO KNOW WHAT SNAKE
+    var snake = getModel().getSnake(model.snakeIndex); // TODO NEEDS TO KNOW WHAT SNAKE
     var dir = snake.direction;
     
     if(dir.equals(Vector(1,0))) // Right

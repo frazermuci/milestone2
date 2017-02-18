@@ -100,7 +100,7 @@ void ConnectionManager::sendIDs()
 		{
 			if(b->first != a->first)
 			{
-				os <<"start:"<< b->second;
+				os <<"start:"<< b->second << ":"<<this->clientIDWithConnNum[b->first];
 				this->server->wsSend(a->first, os.str());
 				os.str("");
 			}

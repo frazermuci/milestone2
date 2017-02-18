@@ -74,7 +74,6 @@ void initializeConnection(int clientID, vector<string> mVect)
 	cm.addConn(clientID, atoi(mVect.at(1).c_str()));
 	if(cm.connReady())
 	{
-		cout << "new game\n";
 		cm.newGame();
 		cm.sendIDs();//on client side, wait until "begin"
 	}
