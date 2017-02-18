@@ -38,7 +38,7 @@ class Model
 		void growSnake(int ID);
 		void changeDirection(int ID, Tuple dir);
 		vector<Tuple> getBonuses();
-		void makeBonus(int bpos);
+		Tuple makeBonus(int bpos);
 		int getBoardWidth();
 		int getBoardHeight();
 		void setIsRunning(bool isRunning);

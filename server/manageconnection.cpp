@@ -231,11 +231,11 @@ void ConnectionManager::moveModel(Compressed* c)
     Snake* snake1 = this->model.getSnake(0);
     Snake* snake2 = this->model.getSnake(1);
 
-    Tuple head1 = snake1.getHead();
-    Tuple head2 = snake2.getHead();
+    Tuple head1 = snake1->getHead();
+    Tuple head2 = snake2->getHead();
 
-    vector<Tuple> body1 = snake1.getBody();
-    vector<Tuple> = snake2.getBody();
+    vector<Tuple> body1 = snake1->getBody();
+    vector<Tuple> body2 = snake2->getBody();
 
     // Check collision for snakes
     bool lose1 = false;
@@ -267,19 +267,19 @@ void ConnectionManager::moveModel(Compressed* c)
     }
 
     // Colliding with yourself
-    for(var i = 1; i < body1.length; i++)
+    for(int i = 1; i < body1.size(); i++)
     {
         if(head1 == body1[i])
             lose1=true;
     }
-    for(var i = 1; i < body2.length; i++)
+    for(int i = 1; i < body2.size(); i++)
     {
         if(head2 == body2[i])
             lose2=true;
     }
 	
-	c->s1Dir = vectToDir(snake1->getDirection());
-	c->s2Dir = vectToDir(snake2->getDirection());
+	c->s1Direction = vectToDir(snake1->getDirection());
+	c->s2Direction = vectToDir(snake2->getDirection());
 	c->s1Loss = lose1;
 	c->s2Loss = lose2;
 	c->s1BonusEaten = false;
@@ -288,9 +288,9 @@ void ConnectionManager::moveModel(Compressed* c)
 	
     // Check bonus (head at bonus position)
 	vector<Tuple> bonuses = this->model.getBonuses();
-    for(var i = 0; i < bonuses.length; i++)
+    for(int i = 0; i < bonuses.size(); i++)
 	{
-		if(head1.equals(bonuses[i]))
+		if(head1 == bonuses[i])
 		{
 			snake1->eatBonus();
 			Tuple newB = this->model.makeBonus(i);
@@ -298,7 +298,7 @@ void ConnectionManager::moveModel(Compressed* c)
 			c->s1BonusPositionX = newB.getX();
 			c->s1BonusPositionY = newB.getY();
 		}
-		if(head2.equals(bonuses[i]))
+		if(head2 == bonuses[i])
 		{
 			snake2->eatBonus();
 			Tuple newB = this->model.makeBonus(i);
@@ -363,7 +363,7 @@ void ConnectionManager::newGame()
 	//return c;
 }*/
 
-unsigned char* ConnectionManager::serialize()
+unsigned char* ConnectionManager::serialize(Compressed* c)
 {
     unsigned char* s = static_cast<unsigned char*>(malloc(sizeof(unsigned char)*4));
     int i = 1;
@@ -371,42 +371,42 @@ unsigned char* ConnectionManager::serialize()
     s[0] = 0;
     
     // s1Dir s1Dir s1Bonus s1Loss s2Dir s2Dir s2Bonus s2Loss
-    if(this->c.s1Direction == 0)    // Right
+    if(c->s1Direction == 0)    // Right
         s[0] += 64;// 01 000000
-    else if(this->c.s1Direction == 1) // Up
+    else if(c->s1Direction == 1) // Up
         s[0] += 128+64;// 11 000000
-    else if(this->c.s1Direction == 2) // Left
+    else if(c->s1Direction == 2) // Left
         s[0] += 0; // 00 000000
     else // Right
         s[0] += 128; // 10 000000
     
-    if(this->c.s1Loss)
+    if(c->s1Loss)
         s[0] += 32; // 00 1 00000
     
-    if(this->c.s1BonusEaten)
+    if(c->s1BonusEaten)
     {
         s[0] += 16; // 000 1 0000
-        s[i] = (this->c.s1BonusPositionX % 16)*16 + (this->c.s1BonusPositionY % 16);
+        s[i] = (c->s1BonusPositionX % 16)*16 + (c->s1BonusPositionY % 16);
         i++;
     }
     
     
-    if(this->c.s2Direction == 0)    // Right
+    if(c->s2Direction == 0)    // Right
         s[0] += 4;// 0000 01 00
-    else if(this->c.s2Direction == 1) // Up
+    else if(c->s2Direction == 1) // Up
         s[0] += 8+4;// 0000 11 00
-    else if(this->c.s2Direction == 2) // Left
+    else if(c->s2Direction == 2) // Left
         s[0] += 0; // 0000 00 00
     else // Down
         s[0] += 8; // 0000 10 00
     
-    if(this->c.s1Loss)
+    if(c->s1Loss)
         s[0] += 2; // 000000 1 0
     
-    if(this->c.s2BonusEaten)
+    if(c->s2BonusEaten)
     {
         s[0] += 1; // 0000000 1
-        s[i] = (this->c.s2BonusPositionX % 16)*16 + (this->c.s2BonusPositionY % 16);
+        s[i] = (c->s2BonusPositionX % 16)*16 + (c->s2BonusPositionY % 16);
         i++;
     }
         

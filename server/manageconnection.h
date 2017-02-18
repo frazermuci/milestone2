@@ -52,14 +52,14 @@ class ConnectionManager
 		void send(int clientID, string message);		
 		void sendAll(string message);		
 		void sendIDs();			
-		void updateModel(int clientID, Compressed c);		
+		void updateModel(int clientID, int newDir);		
 		void addSnake(int clientID, int x, int y, Tuple direction);		
 		void removeSnake(int clientID);	
 		bool stateReady(int clientID);		
-		void moveModel();
+		void moveModel(Compressed* c);
 		void newGame();
 		//Compressed compressModel();
-		unsigned char* serialize();
+		unsigned char* serialize(Compressed* c);
 };
 
 #endif

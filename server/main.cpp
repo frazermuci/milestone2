@@ -99,10 +99,13 @@ void messageHandler(int clientID, string message)
 		if(cm.stateReady(clientID))
 		{			
 			//serializing new state
-			Compressed c = malloc(sizeof(struct Compressed));
+			Compressed* c = static_cast<Compressed*>(malloc(sizeof(struct Compressed)));
 			
-			cm.moveModel(&c);
-			cm.sendAll(cm.serialize(&c));
+			cm.moveModel(c);
+			ostringstream os;
+			os << cm.serialize(c);
+			cm.sendAll(os.str());
+			os.str("");
 			cout << "sendAll\n";
 			
 			free(c);

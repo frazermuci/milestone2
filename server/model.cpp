@@ -153,7 +153,7 @@ Tuple Model::makeBonus(int bpos)
 		y = floor(rand() * this->boardHeight);
 	}
 	this->bonuses.at(bpos) = Tuple(x,y);
-	return new Tuple(x,y);
+	return Tuple(x,y);
 }
 
 int Model::getBoardWidth()
