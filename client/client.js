@@ -46,6 +46,7 @@ function Socket(model){
 		else 
 		{
 			deserialize(array[0]);
+			ViewRefresh();
 			window.setTimeout(ControllerTick, 750);
 		}
 		console.log(e.data)
@@ -206,13 +207,13 @@ function Socket(model){
     var snake = getModel().getSnake(model.snakeIndex); // TODO NEEDS TO KNOW WHAT SNAKE
     var dir = snake.direction;
     
-    if(dir.equals(Vector(1,0))) // Right
+    if(dir.equals(new Vector(1,0))) // Right
         return 64+16+4+1; // 01 01 01 01
-    if(dir.equals(Vector(0,-1))) // Up
+    if(dir.equals(new Vector(0,-1))) // Up
         return 128+64+32+16+8+4+2+1; // 11 11 11 11
-    if(dir.equals(Vector(-1,0))) // Left
+    if(dir.equals(new Vector(-1,0))) // Left
         return 0; // 00 00 00 00
-    if(dir.equals(Vector(0,1))) // Down
+    if(dir.equals(new Vector(0,1))) // Down
         return 128+32+8+2; // 01 01 01 01
 }
 
