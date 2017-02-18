@@ -33,8 +33,8 @@ function ControllerWin(id)
 
 function ControllerTick()
 {
-	sendMessage(serialize(getModel()));
-	
+	socket.sendMessage(socket.serialize(getModel()));
+	return;
     var m = getModel();
 
     // Grow both snakes
@@ -143,5 +143,5 @@ function ControllerMainLoop()
     }
 }
 
-controllerInterval = window.setInterval(ControllerMainLoop, 750);
+//controllerInterval = window.setInterval(ControllerMainLoop, 750);
 //ControllerNewGame();
