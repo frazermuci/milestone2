@@ -9,7 +9,7 @@ function Socket(model){
 
 // Log errors
 	this.scoreArray = [0,0];
-	this.count = 1;
+	//this.count = 1;
 	this.connection.onerror = function (error) {
 		console.log('WebSocket Error ' + error);
 	};
@@ -18,18 +18,22 @@ function Socket(model){
 	this.connection.onmessage = (e)=> {
 		//this is in scope?
 		var array = e.data.split(":");
-		if(this.count)
+		/*if(this.count)
 		{
 		//assumes client 0 based ids
 			var ids = this.model.getIds();
 			
 			console.log("init:"+ids[0]+":"+ids[1]);
-			this.connection.send("init:"+ids[0]+":"+ids[1]);
-		}
+			this.connection.send("init:"+getModel().snakeID);
+		}*/
 		if (array[0] == "init")
 		{
-			array[1] = model.snakeID;
+			//array[1] = model.snakeID;
 			sendMessage("init:" + model.snakeID);
+		}
+		else if(array[0] == "start")
+		{
+			parseInt(array[1])
 		}
 		else 
 		{

@@ -118,7 +118,7 @@ vector<int> webSocket::getClientIDs(){
 }
 
 string webSocket::getClientIP(int clientID){
-    return string(inet_ntoa(wsClients[clientID]->addr));
+    return string("169.234.12.23");//inet_ntoa(wsClients[clientID]->addr));
 }
 
 void webSocket::wsCheckIdleClients(){

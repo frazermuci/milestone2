@@ -72,9 +72,9 @@ bool isInitMessage(string str)
 void initializeConnection(int clientID, vector<string> mVect)
 {
 	cm.addConn(clientID, atoi(mVect.at(1).c_str()));
-	cout << "init " << clientID << " " << atoi(mVect.at(1).c_str());
 	if(cm.connReady())
 	{
+		cout << "new game\n";
 		cm.newGame();
 		cm.sendIDs();//on client side, wait until "begin"
 	}
@@ -83,10 +83,12 @@ void initializeConnection(int clientID, vector<string> mVect)
 /* called when a client sends a message to the server */
 void messageHandler(int clientID, string message)
 {
+		cout << message << endl;
 		vector<string> mVect = parseMessage(message);
 		if(isInitMessage(mVect.at(0)))
 		{
 			//parse message and get id
+			cout << "clientID: " << clientID << " otherID: " << mVect.at(1) << endl;
 			initializeConnection(clientID, mVect);
 			return;
 		}
