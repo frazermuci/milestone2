@@ -94,7 +94,8 @@ void messageHandler(int clientID, string message)
 		{
 			//update model from message
 			cout << "desrialize" << endl;
-			cm.updateModel(deserialize(message));	
+		       
+			cm.updateModel(clientID, cm.deserialize((unsigned char*)message.c_str()));
 		}
 		if(cm.stateReady(clientID))
 		{			
