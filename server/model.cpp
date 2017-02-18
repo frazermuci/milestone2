@@ -144,13 +144,28 @@ bool objectInTheWay(Model m, int x, int y)
 	
 Tuple Model::makeBonus(int bpos)
 {
-	srand(time(NULL));
-	int x = floor(rand() * this->boardWidth);
-	int y = floor(rand() * this->boardHeight);
+		int x = static_cast<int>(floor(rand()))%  this->boardWidth;
+	int y = static_cast<int>(floor(rand()))% this->boardHeight;
+	if(x < 0)
+	{
+		x = x*-1;
+	}
+	if(y < 0)
+	{
+		y = y*-1;
+	}
 	while(objectInTheWay(*this,x,y))
 	{
-		x = floor(rand() * this->boardWidth);
-		y = floor(rand() * this->boardHeight);
+		x = static_cast<int>(floor(rand()))% this->boardWidth;
+		y = static_cast<int>(floor(rand()))%this->boardHeight;
+		if(x < 0)
+		{
+			x = x*-1;
+		}
+		if(y < 0)
+		{
+			y = y*-1;
+		}
 	}
 	this->bonuses.at(bpos) = Tuple(x,y);
 	return Tuple(x,y);

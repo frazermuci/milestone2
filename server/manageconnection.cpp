@@ -414,3 +414,22 @@ unsigned char* ConnectionManager::serialize(Compressed* c)
     
     return s;
 }
+
+int ConnectionManager::deserialize(unsigned char* s)
+{
+	unsigned char c = s[0];
+	
+	if(c > 127)
+	{
+		c-=128;
+		if(c>63)
+			return 1; // ----- UP
+		return 3; // --------- DOWN
+	}
+	else
+	{
+		if(c>63)
+			return 0; // ----- RIGHT
+		return 4; // --------- LEFT
+	}
+}
